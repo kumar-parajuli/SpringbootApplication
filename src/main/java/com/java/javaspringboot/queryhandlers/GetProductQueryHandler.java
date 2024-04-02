@@ -1,5 +1,6 @@
 package com.java.javaspringboot.queryhandlers;
 
+import com.java.javaspringboot.Exception.ProductNotFoundException;
 import com.java.javaspringboot.Repository.ProductRepository;
 import com.java.javaspringboot.Repository.Query;
 import com.java.javaspringboot.model.Product;
@@ -19,7 +20,9 @@ private ProductRepository productRepository;
     public ResponseEntity<ProductDTO> execute(Integer id) {
         Optional<Product>product= productRepository.findById(id);
         if(product.isEmpty()){
-            throw  new RuntimeException("Product not found");
+//            throw  new RuntimeException("Product not found");
+            ///using exception handler for to throw message
+            throw new ProductNotFoundException();
         }
         return ResponseEntity.ok(new ProductDTO(product.get()));
     }

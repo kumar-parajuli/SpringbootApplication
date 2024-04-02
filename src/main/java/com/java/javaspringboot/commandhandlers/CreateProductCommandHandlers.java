@@ -1,5 +1,6 @@
 package com.java.javaspringboot.commandhandlers;
 
+import com.java.javaspringboot.Exception.ProductNotValidException;
 import com.java.javaspringboot.Repository.Command;
 import com.java.javaspringboot.Repository.ProductRepository;
 import com.java.javaspringboot.model.Product;
@@ -10,37 +11,39 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CreateProductCommandHandlers implements Command<Product, ResponseEntity> {
-@Autowired
-private ProductRepository productRepository;
+    @Autowired
+    private ProductRepository productRepository;
+
+
     @Override
     public ResponseEntity execute(Product product) {
-
-validateProduct(product);
+        validateProduct(product);
         productRepository.save(product);
         return ResponseEntity.ok().build();
     }
-    private void  validateProduct(Product product){
+
+    private void validateProduct(Product product) {
         //custom  validate name
-        if(StringUtils.isBlank(product.getName())){
-            throw new RuntimeException("Product name cannot be empty");
+        if (StringUtils.isBlank(product.getName())) {
+            throw new ProductNotValidException("Product name cannot be empty");
         }
 
         //custom validate description
 
-        if(StringUtils.isBlank(product.getDescription())){
-            throw new RuntimeException("Description cannot be empty");
+        if (StringUtils.isBlank(product.getDescription())) {
+            throw new ProductNotValidException("Product Description cannot be empty");
         }
 
         //custom validate price with zero or negative
 
-        if(product.getPrice()<=0.0){
-            throw new RuntimeException("Price cannot ne negative");
+        if (product.getPrice() <= 0.0) {
+            throw new ProductNotValidException("Product Price cannot ne negative");
         }
 
         //custom validate quantity with zero
 
-        if(product.getQuantity()<=0){
-            throw  new RuntimeException("Price cannot be negative");
+        if (product.getQuantity() <= 0) {
+            throw new ProductNotValidException("Product Price cannot be negative");
         }
     }
 }

@@ -14,58 +14,55 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api")
 public class ProductController {
 
-@Autowired
-private ProductRepository productRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
-@Autowired
-private GetAllProductsQueryHandler getAllProductsQueryHandler;
-@Autowired
+    @Autowired
+    private GetAllProductsQueryHandler getAllProductsQueryHandler;
+    @Autowired
     GetProductQueryHandler getProductQueryHandler;
-@Autowired
-private CreateProductCommandHandlers createProductCommandHandlers;
+    @Autowired
+    private CreateProductCommandHandlers createProductCommandHandlers;
     @Autowired
     private UpdateProductCommandHandeler updateProductCommandHandeler;
-@Autowired
-private DeleteProductCommandHandler deleteProductCommandHandler;
+    @Autowired
+    private DeleteProductCommandHandler deleteProductCommandHandler;
 
-        @GetMapping("/products")
-        public ResponseEntity<List<ProductDTO>> getProduct(){
-//            return ResponseEntity.ok(productRepository.findAll());
-            return  getAllProductsQueryHandler.execute(null);
-        }
+    @GetMapping("/product")
+    public ResponseEntity<List<ProductDTO>> getProduct() {
+        return getAllProductsQueryHandler.execute(null);
+    }
 
-        @GetMapping("/{id}")
-    public ResponseEntity<ProductDTO>getProduct(@PathVariable Integer id){
-            return getProductQueryHandler.execute(id);
-        }
-        @PostMapping("/addProduct")
-    public ResponseEntity createProduct(@RequestBody Product product){
-//           productRepository.save(product);
-//          return ResponseEntity.ok().build();
-            createProductCommandHandlers.execute(product);
-            return  ResponseEntity.ok().build();
-       }
+    @GetMapping("/product/{id}")
+    public ResponseEntity<ProductDTO> getProduct(@PathVariable Integer id) {
+        return getProductQueryHandler.execute(id);
+    }
 
-    @PutMapping ("/{id}")
-            public ResponseEntity updateProduct(@PathVariable Integer id, @RequestBody Product product){
-            UpdateProductCommand command= new UpdateProductCommand(id,product);
-//            product.setId(id);
-//            productRepository.save(product);
-//            return  ResponseEntity.ok().build();
-        return   updateProductCommandHandeler.execute(command);
+    @PostMapping("/addProduct")
+    public ResponseEntity createProduct(@RequestBody Product product) {
+
+        return createProductCommandHandlers.execute(product);
 
     }
-    @DeleteMapping("/{id}")
-    public  ResponseEntity deleteProduct(@PathVariable Integer id ){
-//        product.setId(command.getId());
-//        productRepository.save(product);
-//        return  ResponseEntity.ok().build();
-return deleteProductCommandHandler.execute(id);
+
+    @PutMapping("/product/{id}")
+    public ResponseEntity updateProduct(@PathVariable Integer id, @RequestBody Product product) {
+        UpdateProductCommand command = new UpdateProductCommand(id, product);
+
+        return updateProductCommandHandeler.execute(command);
+
     }
+
+    @DeleteMapping("/product/{id}")
+    public ResponseEntity deleteProduct(@PathVariable Integer id) {
+        return deleteProductCommandHandler.execute(id);
+    }
+
+
 }
